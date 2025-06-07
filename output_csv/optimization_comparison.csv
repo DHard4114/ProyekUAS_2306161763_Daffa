@@ -1,5 +1,0 @@
-Parameter,Original_Value,Optimized_Value,Unit,Improvement_Percent
-k1_spring,25000.00,24500.00,N/m,-2.00
-k2_spring,22000.00,22500.00,N/m,2.27
-c1_damping,1800.00,1750.00,Ns/m,-2.78
-c2_damping,1600.00,1650.00,Ns/m,3.13
