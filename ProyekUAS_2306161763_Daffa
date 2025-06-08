@@ -55,14 +55,7 @@ m\ddot{x} + c\dot{x} + kx = F(t)
 \label{eq:mass_spring_damper}
 \end{equation}
 
-dimana:
-\begin{itemize}
-\item $m$ = massa (kg)
-\item $c$ = koefisien redaman (Ns/m)
-\item $k$ = konstanta pegas (N/m)
-\item $x$ = posisi massa (m)
-\item $F(t)$ = gaya eksternal (N)
-\end{itemize}
+dimana $m$ adalah massa (kg), $c$ adalah koefisien redaman (Ns/m), $k$ adalah konstanta pegas (N/m), $x$ adalah posisi massa (m), dan $F(t)$ adalah gaya eksternal (N).
 
 \subsection{Kontroler PID}
 
@@ -73,13 +66,7 @@ u(t) = K_p e(t) + K_i \int_0^t e(\tau) d\tau + K_d \frac{de(t)}{dt}
 \label{eq:pid_controller}
 \end{equation}
 
-dimana:
-\begin{itemize}
-\item $K_p$ = proportional gain
-\item $K_i$ = integral gain
-\item $K_d$ = derivative gain
-\item $e(t)$ = error sinyal
-\end{itemize}
+dimana $K_p$, $K_i$, dan $K_d$ berturut-turut adalah proportional gain, integral gain, dan derivative gain, serta $e(t)$ adalah error sinyal.
 
 \subsection{Metode Runge-Kutta Orde Keempat}
 
@@ -101,11 +88,12 @@ y_{n+1} &= y_n + \frac{1}{6}(k_1 + 2k_2 + 2k_3 + k_4)
 \label{eq:runge_kutta}
 \end{align}
 
-\section{Penjelasan Data Yang Digunakan}
-
-Data yang digunakan dalam simulasi ini adalah parameter sistem massa-pegas-damper dan parameter kontroler PID sebagai berikut:
+\section{Metodologi}
 
 \subsection{Parameter Sistem}
+
+Data yang digunakan dalam simulasi adalah parameter sistem massa-pegas-damper dan parameter kontroler PID sebagaimana ditunjukkan pada Tabel \ref{tab:system_parameters} dan Tabel \ref{tab:controller_parameters}.
+
 \begin{table}[H]
 \centering
 \caption{Parameter Sistem Massa-Pegas-Damper}
@@ -123,7 +111,6 @@ Waktu Simulasi & 10.0 & s \\
 \label{tab:system_parameters}
 \end{table}
 
-\subsection{Parameter Kontroler}
 \begin{table}[H]
 \centering
 \caption{Parameter Kontroler PID}
@@ -140,8 +127,6 @@ Setpoint & 1.0 m \\
 \label{tab:controller_parameters}
 \end{table}
 
-\section{Penjelasan Metode Yang Digunakan}
-
 \subsection{Konversi Sistem ke Persamaan Orde Pertama}
 
 Persamaan sistem massa-pegas-damper (Persamaan \ref{eq:mass_spring_damper}) dikonversi menjadi sistem persamaan diferensial orde pertama:
@@ -156,36 +141,17 @@ dimana $v = \dot{x}$ adalah kecepatan massa.
 
 \subsection{Implementasi Metode Runge-Kutta}
 
-Algoritma implementasi metode Runge-Kutta untuk sistem ini:
-
-\begin{algorithmic}
-\STATE Initialize system state: $x_0 = 0$, $v_0 = 0$
-\STATE Initialize controller parameters
-\FOR{$i = 0$ to $n_{steps}$}
-    \STATE Calculate control force: $F_{control} = PID(x_i, v_i)$
-    \STATE Calculate $k_1$: derivatives at current state
-    \STATE Calculate $k_2$: derivatives at midpoint using $k_1$
-    \STATE Calculate $k_3$: derivatives at midpoint using $k_2$
-    \STATE Calculate $k_4$: derivatives at endpoint using $k_3$
-    \STATE Update state: $x_{i+1}, v_{i+1}$ using RK4 formula
-    \STATE Store results
-\ENDFOR
-\end{algorithmic}
+Algoritma implementasi metode Runge-Kutta untuk sistem ini meliputi inisialisasi kondisi awal sistem, perhitungan gaya kontrol menggunakan PID, dan iterasi numerik menggunakan formula RK4.
 
 \subsection{Analisis Stabilitas}
 
-Stabilitas sistem dianalisis melalui:
-\begin{enumerate}
-\item Settling time: waktu yang diperlukan sistem untuk mencapai steady-state
-\item Overshoot: persentase nilai maksimum terhadap setpoint
-\item Steady-state error: error pada kondisi steady-state
-\end{enumerate}
+Stabilitas sistem dianalisis melalui tiga metrik utama: settling time (waktu yang diperlukan sistem untuk mencapai steady-state), overshoot (persentase nilai maksimum terhadap setpoint), dan steady-state error (error pada kondisi steady-state).
 
-\section{Diskusi dan Analisa Hasil Eksperimen}
+\section{Hasil dan Pembahasan}
 
 \subsection{Hasil Simulasi}
 
-Simulasi dilakukan dengan parameter yang telah ditentukan dan menghasilkan respons sistem sebagai berikut:
+Simulasi dilakukan dengan parameter yang telah ditentukan dan menghasilkan respons sistem sebagaimana ditunjukkan pada Tabel \ref{tab:performance_results}.
 
 \begin{table}[H]
 \centering
@@ -196,79 +162,159 @@ Simulasi dilakukan dengan parameter yang telah ditentukan dan menghasilkan respo
 \hline
 Settling Time (2\% tolerance) & 4.176 s \\
 Overshoot & 19.78\% \\
-Final Position & 1.000148 m \\
-Final Velocity & -0.000131 m/s \\
-Steady-state Error & 0.01\% \\  % DIPERBAIKI
+Final Position & 0.999802 m \\
+Final Velocity & -0.047217 m/s \\
+Steady-state Error & 0.22\% \\
 \hline
 \end{tabular}
+\label{tab:performance_results}
 \end{table}
 
 \subsection{Analisis Pengaruh Parameter Kontroler}
 
-Analisis dilakukan dengan memvariasikan nilai $K_p$ untuk melihat pengaruhnya terhadap stabilitas:
+Analisis dilakukan dengan memvariasikan nilai $K_p$ untuk melihat pengaruhnya terhadap stabilitas. Hasil analisis ditunjukkan pada Gambar \ref{fig:system_response}.
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}{0.48\columnwidth}
+    \includegraphics[width=\textwidth]{settling_time_vs_kp.png}
+    \caption{Settling Time vs Kp}
+    \label{fig:settling_time}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\columnwidth}
+    \includegraphics[width=\textwidth]{overshoot_vs_kp.png}
+    \caption{Overshoot vs Kp}
+    \label{fig:overshoot}
+\end{subfigure}
+\caption{Karakteristik Respons Sistem terhadap Variasi Parameter Kp}
+\label{fig:system_response}
+\end{figure}
+
+Gambar \ref{fig:settling_time} memperlihatkan bahwa peningkatan nilai $K_p$ cenderung mempercepat settling time hingga mencapai nilai minimum pada $K_p = 20$ (3.844s), namun setelah itu settling time kembali meningkat drastis. \textbf{Meskipun $K_p = 20$ memberikan settling time tercepat, $K_p = 15$ ditandai sebagai optimal} karena memberikan \textbf{balance terbaik} antara:
+\begin{itemize}
+\item Settling time yang competitive (4.176s, hanya 0.332s lebih lambat dari minimum)
+\item Overshoot terendah (19.776\% vs 22.281\% pada Kp=20)
+\item Steady-state error yang acceptable (0.217\% vs 0.975\% pada Kp=20)
+\end{itemize}
+
+Sementara itu, Gambar \ref{fig:overshoot} menunjukkan pola dimana overshoot mengalami penurunan dari $K_p = 1$ hingga mencapai minimum pada $K_p = 10$ dan $K_p = 15$ (19.8\% dan 19.776\%), kemudian mengalami peningkatan signifikan pada nilai $K_p$ yang lebih tinggi. \textbf{Pola ini mengkonfirmasi bahwa $K_p = 15$ optimal untuk stabilitas sistem}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\columnwidth]{steady_state_error_vs_kp.png}
+\caption{Steady-State Error vs Kp}
+\label{fig:ss_error}
+\end{figure}
+
+Gambar \ref{fig:ss_error} menampilkan karakteristik steady-state error terhadap variasi $K_p$. Terlihat bahwa peningkatan $K_p$ secara umum mengurangi steady-state error, namun pada nilai yang sangat tinggi ($K_p = 50$), error kembali meningkat secara signifikan.
+
+\subsection{Analisis Trade-off}
+
+Untuk memahami hubungan antar parameter performa, dilakukan analisis trade-off yang divisualisasikan pada Gambar \ref{fig:tradeoff}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\columnwidth]{trade-off_settling_time_vs_overshoot.png}
+\caption{Analisis Trade-off: Settling Time vs Overshoot}
+\label{fig:tradeoff}
+\end{figure}
+
+Gambar \ref{fig:tradeoff} menyajikan scatter plot yang menunjukkan hubungan antara settling time dan overshoot untuk berbagai nilai $K_p$. Visualisasi ini memungkinkan identifikasi konfigurasi parameter yang memberikan keseimbangan optimal antara kecepatan respons dan overshoot yang dapat diterima.
+
+\subsection{Evaluasi Performa Terintegrasi}
+
+Untuk memberikan assessment yang komprehensif terhadap performa sistem, dilakukan normalisasi terhadap semua metrik performa dan perhitungan indeks performa overall sebagaimana ditunjukkan pada Gambar \ref{fig:integrated_performance}.
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}{0.48\columnwidth}
+    \includegraphics[width=\textwidth]{normalize_performance_comparison.png}
+    \caption{Perbandingan Performa Ternormalisasi}
+    \label{fig:normalized}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\columnwidth}
+    \includegraphics[width=\textwidth]{overall_performance_index.png}
+    \caption{Indeks Performa Overall}
+    \label{fig:performance_index}
+\end{subfigure}
+\caption{Evaluasi Performa Terintegrasi Sistem}
+\label{fig:integrated_performance}
+\end{figure}
+
+Gambar \ref{fig:normalized} menampilkan perbandingan antara tiga metrik utama (settling time, overshoot, dan steady-state error) setelah dinormalisasi. Normalisasi ini memungkinkan perbandingan langsung antar metrik yang memiliki skala berbeda.
+
+Gambar \ref{fig:performance_index} menunjukkan indeks performa overall yang dihitung berdasarkan weighted sum dari ketiga metrik ternormalisasi. Indeks ini memberikan assessment tunggal terhadap performa sistem, dimana nilai yang lebih rendah mengindikasikan performa yang lebih baik.
 
 \begin{table}[H]
 \centering
 \caption{Pengaruh Proportional Gain terhadap Stabilitas}
-\begin{tabular}{|c|c|c|c|}
+\begin{tabular}{|c|c|c|c|c|}
 \hline
-\textbf{$K_p$} & \textbf{Settling Time (s)} & \textbf{Overshoot (\%)} & \textbf{Stabil} \\
+\textbf{$K_p$} & \textbf{Settling Time (s)} & \textbf{Overshoot (\%)} & \textbf{SS Error (\%)} & \textbf{Status} \\
 \hline
-1.0 & 4.999 & 48.5 & Ya \\
-5.0 & 4.855 & 27.8 & Ya \\
-10.0 & 4.729 & 19.8 & Ya \\
-15.0 & 4.176 & 19.8 & Ya \\
-20.0 & 3.844 & 22.3 & Ya \\
-50.0 & 4.999 & 39.3 & Ya \\
+1.0 & 4.999 & 48.475 & 21.001 & STABLE \\
+5.0 & 4.855 & 27.840 & 0.241 & STABLE \\
+10.0 & 4.729 & 19.800 & 0.123 & STABLE \\
+15.0 & 4.176 & 19.776 & 0.217 & STABLE \\
+20.0 & 3.844 & 22.281 & 0.975 & STABLE \\
+50.0 & 4.999 & 39.256 & 2.156 & STABLE \\
 \hline
 \end{tabular}
+\label{tab:stability_analysis}
 \end{table}
 
 \subsection{Diskusi}
 
-Hasil simulasi menunjukkan beberapa hal penting:
+Berdasarkan hasil eksperimen dan analisis data CSV, beberapa temuan penting dapat diidentifikasi:
 
 \begin{enumerate}
-\item \textbf{Akurasi Metode}: Metode Runge-Kutta orde keempat memberikan hasil yang akurat dengan error numerik yang sangat kecil.
+\item \textbf{Akurasi Metode}: Implementasi metode Runge-Kutta orde keempat menunjukkan konvergensi yang baik dengan error numerik yang dapat diabaikan.
 
-\item \textbf{Pengaruh $K_p$}: Peningkatan nilai $K_p$ mempercepat respons sistem tetapi meningkatkan overshoot. Nilai $K_p$ yang terlalu tinggi dapat menyebabkan sistem menjadi tidak stabil.
+\item \textbf{Klarifikasi Definisi "Optimal"}: 
+   \begin{itemize}
+   \item \textbf{$K_p = 20$}: Optimal untuk \textit{single criterion} (settling time tercepat)
+   \item \textbf{$K_p = 15$}: Optimal untuk \textit{multi-criteria} (balance terbaik semua metrik)
+   \item \textbf{$K_p = 10$}: Optimal untuk \textit{steady-state accuracy} (SS error terendah)
+   \end{itemize}
 
-\item \textbf{Performa Sistem}: Dengan parameter yang dipilih, sistem menunjukkan performa yang baik dengan settling time yang cepat dan overshoot yang masih dalam batas toleransi.
+\item \textbf{Justifikasi Pemilihan Kp=15 sebagai "Overall Optimal"}: 
+   \begin{itemize}
+   \item Trade-off analysis menunjukkan peningkatan settling time dari 4.176s ke 3.844s (gain 0.332s) tidak sebanding dengan peningkatan overshoot dari 19.776\% ke 22.281\% (penalty 2.505\%)
+   \item Untuk aplikasi kontrol umum, stabilitas (overshoot rendah) lebih kritikal daripada kecepatan marginal
+   \item Performance index terintegrasi mengkonfirmasi Kp=15 sebagai optimal
+   \end{itemize}
 
-\item \textbf{Stabilitas}: Sistem tetap stabil untuk rentang parameter kontroler yang wajar, menunjukkan robustness desain kontroler.
+\item \textbf{Trade-off Analysis}: Data mengkonfirmasi trade-off fundamental dimana peningkatan $K_p$ dari 15 ke 20 dapat mempercepat settling time (4.176s → 3.844s) namun dengan cost peningkatan overshoot (19.776\% → 22.281\%) dan steady-state error (0.217\% → 0.975\%).
+
+\item \textbf{Robustness Sistem}: Seluruh konfigurasi parameter (Kp: 1-50) menghasilkan sistem STABLE, mengindikasikan robustness desain kontroler.
 \end{enumerate}
-
-\subsection{Validasi Hasil}
-
-Validasi dilakukan dengan membandingkan hasil simulasi dengan karakteristik teoretis sistem:
-
-Frekuensi natural sistem: $\omega_n = \sqrt{\frac{k}{m}} = \sqrt{\frac{10}{1}} = 3.16$ rad/s
-
-Damping ratio: $\zeta = \frac{c}{2\sqrt{mk}} = \frac{2}{2\sqrt{1 \times 10}} = 0.316$
-
-Sistem bersifat underdamped ($\zeta < 1$), yang konsisten dengan hasil simulasi yang menunjukkan adanya overshoot.
 
 \section{Kesimpulan}
 
-Berdasarkan hasil simulasi dan analisis yang telah dilakukan, dapat disimpulkan:
+Penelitian ini berhasil mengimplementasikan dan menganalisis sistem kontrol massa-pegas-damper menggunakan metode Runge-Kutta orde keempat dengan kontroler PID. Hasil yang diperoleh menunjukkan:
 
 \begin{enumerate}
-\item Metode Runge-Kutta orde keempat berhasil diimplementasikan untuk menganalisis stabilitas sistem kontrol massa-pegas-damper dengan akurasi tinggi.
+\item Metode Runge-Kutta orde keempat terbukti efektif untuk simulasi numerik sistem kontrol dengan akurasi tinggi dan konvergensi yang stabil.
 
-\item Kontroler PID dengan parameter $K_p=15$, $K_i=5$, dan $K_d=3$ memberikan performa yang baik dengan settling time 4.176 detik dan overshoot 19.78\%.
+\item Analisis parametrik mengungkap karakteristik non-linear hubungan antara parameter kontroler dan performa sistem. \textbf{Berdasarkan data empiris, $K_p=15$ terbukti optimal} karena memberikan:
+   \begin{itemize}
+   \item Overshoot terendah (19.776\%)
+   \item Settling time yang competitive (4.176s)
+   \item Steady-state error yang acceptable (0.217\%)
+   \end{itemize}
 
-\item Analisis parametrik menunjukkan bahwa peningkatan gain proportional mempercepat respons sistem tetapi meningkatkan overshoot, sehingga diperlukan trade-off dalam pemilihan parameter.
+\item Visualisasi grafik dan analisis data CSV mengkonfirmasi trade-off fundamental antara kecepatan respons, overshoot, dan akurasi steady-state, memungkinkan pengambilan keputusan yang informed dalam desain kontroler.
 
-\item Sistem menunjukkan stabilitas yang baik untuk rentang parameter kontroler yang diuji, mengkonfirmasi robustness desain sistem kontrol.
+\item Sistem menunjukkan robustness yang excellent terhadap variasi parameter kontroler dalam rentang yang diuji (1-50), dengan semua konfigurasi menghasilkan sistem yang stabil.
 
-\item Implementasi program dalam bahasa C berhasil memberikan hasil simulasi yang akurat dan dapat digunakan untuk analisis lebih lanjut.
+\item Implementasi program memberikan foundation yang solid untuk eksplorasi lebih lanjut dan optimasi sistem kontrol massa-pegas-damper berdasarkan multi-criteria optimization.
 \end{enumerate}
 
-\section{Link Repositori}
+\section*{Acknowledgment}
 
-\textbf{Github}: \url{https://github.com/DHard4114/ProyekUAS_2306161763_Daffa}
-
-\textbf{Youtube}: \url{https://youtube.com/watch?v=demo_video_id}
+Penulis mengucapkan terima kasih kepada Universitas Indonesia dan seluruh pihak yang telah mendukung penelitian ini.
 
 \begin{thebibliography}{00}
 \bibitem{ogata2010modern} K. Ogata, "Modern Control Engineering," 5th ed. Boston: Prentice Hall, 2010.

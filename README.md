@@ -1,6 +1,4 @@
-Berikut adalah versi yang telah diperbaiki dan dirapikan dalam format Markdown (`.md`) yang sesuai:
 
----
 
 # Analisis Stabilitas Sistem Kontrol Massa-Pegas-Damper dengan Metode Runge-Kutta
 
