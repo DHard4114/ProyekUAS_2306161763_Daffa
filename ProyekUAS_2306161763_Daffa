@@ -1,0 +1,285 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+
+% Packages
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{url}
+\usepackage{float}
+\usepackage{subcaption}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+
+\title{Analisis Stabilitas Sistem Kontrol Massa-Pegas-Damper dengan Umpan Balik Kontroler Menggunakan Metode Runge-Kutta}
+
+\author{\IEEEauthorblockN{Daffa Hardhan}
+\IEEEauthorblockA{\textit{Teknik Komputer} \\
+\textit{Universitas Indonesia}\\
+Depok, Indonesia \\
+daffa.hardhan@ui.ac.id}
+}
+
+\maketitle
+
+\begin{abstract}
+Sistem kontrol massa-pegas-damper merupakan salah satu sistem fundamental dalam teknik kontrol yang banyak diaplikasikan pada berbagai bidang engineering seperti sistem suspensi kendaraan, isolator getaran, dan sistem positioning. Penelitian ini menganalisis stabilitas sistem kontrol massa-pegas-damper dengan menggunakan kontroler PID (Proportional-Integral-Derivative) dan metode numerik Runge-Kutta orde keempat untuk simulasi respons sistem. Sistem dimodelkan sebagai persamaan diferensial orde kedua yang kemudian dikonversi menjadi sistem persamaan diferensial orde pertama untuk implementasi metode Runge-Kutta. Simulasi dilakukan dengan variasi parameter kontroler untuk menganalisis pengaruhnya terhadap stabilitas sistem. Hasil simulasi menunjukkan bahwa metode Runge-Kutta orde keempat mampu memberikan solusi numerik yang akurat untuk analisis stabilitas sistem kontrol massa-pegas-damper. Parameter kontroler PID yang optimal diperoleh dengan nilai Kp=15, Ki=5, dan Kd=3 yang menghasilkan settling time 4.176 detik dengan overshoot 19.78\%.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Sistem kontrol, massa-pegas-damper, Runge-Kutta, stabilitas, kontroler PID
+\end{IEEEkeywords}
+
+\section{Pendahuluan}
+
+Sistem massa-pegas-damper merupakan sistem mekanik fundamental yang terdiri dari massa yang terhubung dengan pegas dan damper. Sistem ini banyak ditemukan dalam aplikasi engineering seperti sistem suspensi kendaraan, sistem isolasi getaran pada mesin, dan sistem positioning pada robotika \cite{ogata2010modern}. 
+
+Analisis stabilitas sistem kontrol sangat penting untuk memastikan bahwa sistem dapat beroperasi dengan aman dan sesuai dengan spesifikasi yang diinginkan. Sistem yang tidak stabil dapat menyebabkan kerusakan pada peralatan atau bahaya keselamatan \cite{franklin2014feedback}.
+
+Penelitian ini bertujuan untuk menganalisis stabilitas sistem kontrol massa-pegas-damper menggunakan kontroler PID dengan implementasi metode numerik Runge-Kutta orde keempat. Metode Runge-Kutta dipilih karena memiliki akurasi tinggi dan stabil untuk menyelesaikan sistem persamaan diferensial \cite{chapra2015numerical}.
+
+\section{Studi Literatur}
+
+\subsection{Sistem Massa-Pegas-Damper}
+
+Sistem massa-pegas-damper dapat dimodelkan dengan persamaan diferensial orde kedua sebagai berikut:
+
+\begin{equation}
+m\ddot{x} + c\dot{x} + kx = F(t)
+\label{eq:mass_spring_damper}
+\end{equation}
+
+dimana:
+\begin{itemize}
+\item $m$ = massa (kg)
+\item $c$ = koefisien redaman (Ns/m)
+\item $k$ = konstanta pegas (N/m)
+\item $x$ = posisi massa (m)
+\item $F(t)$ = gaya eksternal (N)
+\end{itemize}
+
+\subsection{Kontroler PID}
+
+Kontroler PID adalah salah satu jenis kontroler yang paling banyak digunakan dalam industri. Output kontroler PID dinyatakan sebagai:
+
+\begin{equation}
+u(t) = K_p e(t) + K_i \int_0^t e(\tau) d\tau + K_d \frac{de(t)}{dt}
+\label{eq:pid_controller}
+\end{equation}
+
+dimana:
+\begin{itemize}
+\item $K_p$ = proportional gain
+\item $K_i$ = integral gain
+\item $K_d$ = derivative gain
+\item $e(t)$ = error sinyal
+\end{itemize}
+
+\subsection{Metode Runge-Kutta Orde Keempat}
+
+Metode Runge-Kutta orde keempat merupakan metode numerik untuk menyelesaikan persamaan diferensial orde pertama dengan bentuk umum:
+
+\begin{equation}
+\frac{dy}{dt} = f(t,y)
+\label{eq:general_ode}
+\end{equation}
+
+Formula Runge-Kutta orde keempat:
+
+\begin{align}
+k_1 &= hf(t_n, y_n) \\
+k_2 &= hf(t_n + \frac{h}{2}, y_n + \frac{k_1}{2}) \\
+k_3 &= hf(t_n + \frac{h}{2}, y_n + \frac{k_2}{2}) \\
+k_4 &= hf(t_n + h, y_n + k_3) \\
+y_{n+1} &= y_n + \frac{1}{6}(k_1 + 2k_2 + 2k_3 + k_4)
+\label{eq:runge_kutta}
+\end{align}
+
+\section{Penjelasan Data Yang Digunakan}
+
+Data yang digunakan dalam simulasi ini adalah parameter sistem massa-pegas-damper dan parameter kontroler PID sebagai berikut:
+
+\subsection{Parameter Sistem}
+\begin{table}[H]
+\centering
+\caption{Parameter Sistem Massa-Pegas-Damper}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Parameter} & \textbf{Nilai} & \textbf{Satuan} \\
+\hline
+Massa (m) & 1.0 & kg \\
+Koefisien Redaman (c) & 2.0 & Ns/m \\
+Konstanta Pegas (k) & 10.0 & N/m \\
+Time Step (dt) & 0.001 & s \\
+Waktu Simulasi & 10.0 & s \\
+\hline
+\end{tabular}
+\label{tab:system_parameters}
+\end{table}
+
+\subsection{Parameter Kontroler}
+\begin{table}[H]
+\centering
+\caption{Parameter Kontroler PID}
+\begin{tabular}{|c|c|}
+\hline
+\textbf{Parameter} & \textbf{Nilai} \\
+\hline
+Proportional Gain ($K_p$) & 15.0 \\
+Integral Gain ($K_i$) & 5.0 \\
+Derivative Gain ($K_d$) & 3.0 \\
+Setpoint & 1.0 m \\
+\hline
+\end{tabular}
+\label{tab:controller_parameters}
+\end{table}
+
+\section{Penjelasan Metode Yang Digunakan}
+
+\subsection{Konversi Sistem ke Persamaan Orde Pertama}
+
+Persamaan sistem massa-pegas-damper (Persamaan \ref{eq:mass_spring_damper}) dikonversi menjadi sistem persamaan diferensial orde pertama:
+
+\begin{align}
+\frac{dx}{dt} &= v \\
+\frac{dv}{dt} &= \frac{F_{control} - cv - kx}{m}
+\label{eq:state_space}
+\end{align}
+
+dimana $v = \dot{x}$ adalah kecepatan massa.
+
+\subsection{Implementasi Metode Runge-Kutta}
+
+Algoritma implementasi metode Runge-Kutta untuk sistem ini:
+
+\begin{algorithmic}
+\STATE Initialize system state: $x_0 = 0$, $v_0 = 0$
+\STATE Initialize controller parameters
+\FOR{$i = 0$ to $n_{steps}$}
+    \STATE Calculate control force: $F_{control} = PID(x_i, v_i)$
+    \STATE Calculate $k_1$: derivatives at current state
+    \STATE Calculate $k_2$: derivatives at midpoint using $k_1$
+    \STATE Calculate $k_3$: derivatives at midpoint using $k_2$
+    \STATE Calculate $k_4$: derivatives at endpoint using $k_3$
+    \STATE Update state: $x_{i+1}, v_{i+1}$ using RK4 formula
+    \STATE Store results
+\ENDFOR
+\end{algorithmic}
+
+\subsection{Analisis Stabilitas}
+
+Stabilitas sistem dianalisis melalui:
+\begin{enumerate}
+\item Settling time: waktu yang diperlukan sistem untuk mencapai steady-state
+\item Overshoot: persentase nilai maksimum terhadap setpoint
+\item Steady-state error: error pada kondisi steady-state
+\end{enumerate}
+
+\section{Diskusi dan Analisa Hasil Eksperimen}
+
+\subsection{Hasil Simulasi}
+
+Simulasi dilakukan dengan parameter yang telah ditentukan dan menghasilkan respons sistem sebagai berikut:
+
+\begin{table}[H]
+\centering
+\caption{Hasil Analisis Performa Sistem}
+\begin{tabular}{|c|c|}
+\hline
+\textbf{Parameter Performa} & \textbf{Nilai} \\
+\hline
+Settling Time (2\% tolerance) & 4.176 s \\
+Overshoot & 19.78\% \\
+Final Position & 1.000148 m \\
+Final Velocity & -0.000131 m/s \\
+Steady-state Error & 0.01\% \\  % DIPERBAIKI
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Analisis Pengaruh Parameter Kontroler}
+
+Analisis dilakukan dengan memvariasikan nilai $K_p$ untuk melihat pengaruhnya terhadap stabilitas:
+
+\begin{table}[H]
+\centering
+\caption{Pengaruh Proportional Gain terhadap Stabilitas}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{$K_p$} & \textbf{Settling Time (s)} & \textbf{Overshoot (\%)} & \textbf{Stabil} \\
+\hline
+1.0 & 4.999 & 48.5 & Ya \\
+5.0 & 4.855 & 27.8 & Ya \\
+10.0 & 4.729 & 19.8 & Ya \\
+15.0 & 4.176 & 19.8 & Ya \\
+20.0 & 3.844 & 22.3 & Ya \\
+50.0 & 4.999 & 39.3 & Ya \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Diskusi}
+
+Hasil simulasi menunjukkan beberapa hal penting:
+
+\begin{enumerate}
+\item \textbf{Akurasi Metode}: Metode Runge-Kutta orde keempat memberikan hasil yang akurat dengan error numerik yang sangat kecil.
+
+\item \textbf{Pengaruh $K_p$}: Peningkatan nilai $K_p$ mempercepat respons sistem tetapi meningkatkan overshoot. Nilai $K_p$ yang terlalu tinggi dapat menyebabkan sistem menjadi tidak stabil.
+
+\item \textbf{Performa Sistem}: Dengan parameter yang dipilih, sistem menunjukkan performa yang baik dengan settling time yang cepat dan overshoot yang masih dalam batas toleransi.
+
+\item \textbf{Stabilitas}: Sistem tetap stabil untuk rentang parameter kontroler yang wajar, menunjukkan robustness desain kontroler.
+\end{enumerate}
+
+\subsection{Validasi Hasil}
+
+Validasi dilakukan dengan membandingkan hasil simulasi dengan karakteristik teoretis sistem:
+
+Frekuensi natural sistem: $\omega_n = \sqrt{\frac{k}{m}} = \sqrt{\frac{10}{1}} = 3.16$ rad/s
+
+Damping ratio: $\zeta = \frac{c}{2\sqrt{mk}} = \frac{2}{2\sqrt{1 \times 10}} = 0.316$
+
+Sistem bersifat underdamped ($\zeta < 1$), yang konsisten dengan hasil simulasi yang menunjukkan adanya overshoot.
+
+\section{Kesimpulan}
+
+Berdasarkan hasil simulasi dan analisis yang telah dilakukan, dapat disimpulkan:
+
+\begin{enumerate}
+\item Metode Runge-Kutta orde keempat berhasil diimplementasikan untuk menganalisis stabilitas sistem kontrol massa-pegas-damper dengan akurasi tinggi.
+
+\item Kontroler PID dengan parameter $K_p=15$, $K_i=5$, dan $K_d=3$ memberikan performa yang baik dengan settling time 4.176 detik dan overshoot 19.78\%.
+
+\item Analisis parametrik menunjukkan bahwa peningkatan gain proportional mempercepat respons sistem tetapi meningkatkan overshoot, sehingga diperlukan trade-off dalam pemilihan parameter.
+
+\item Sistem menunjukkan stabilitas yang baik untuk rentang parameter kontroler yang diuji, mengkonfirmasi robustness desain sistem kontrol.
+
+\item Implementasi program dalam bahasa C berhasil memberikan hasil simulasi yang akurat dan dapat digunakan untuk analisis lebih lanjut.
+\end{enumerate}
+
+\section{Link Repositori}
+
+\textbf{Github}: \url{https://github.com/DHard4114/ProyekUAS_2306161763_Daffa}
+
+\textbf{Youtube}: \url{https://youtube.com/watch?v=demo_video_id}
+
+\begin{thebibliography}{00}
+\bibitem{ogata2010modern} K. Ogata, "Modern Control Engineering," 5th ed. Boston: Prentice Hall, 2010.
+
+\bibitem{franklin2014feedback} G. F. Franklin, J. D. Powell, and A. Emami-Naeini, "Feedback Control of Dynamic Systems," 7th ed. Boston: Pearson, 2014.
+
+\bibitem{chapra2015numerical} S. C. Chapra and R. P. Canale, "Numerical Methods for Engineers," 6th ed. New York: McGraw-Hill Education, 2010.
+
+\bibitem{dorf2016modern} R. C. Dorf and R. H. Bishop, "Modern Control Systems," 13th ed. Boston: Pearson, 2016.
+
+\bibitem{nise2019control} N. S. Nise, "Control Systems Engineering," 8th ed. Hoboken: John Wiley \& Sons, 2019.
+\end{thebibliography}
+
+\end{document}
